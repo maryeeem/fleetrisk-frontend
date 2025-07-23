@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: assur-front
-  namespace: preprod
 spec:
   replicas: 1
   selector:
@@ -14,11 +13,20 @@ spec:
         app: assur-front
     spec:
       serviceAccountName: internal-app
+      # securityContext:
+      #   runAsUser: 0
+      #   runAsGroup: 0
+      #   fsGroup: 0
       containers:
       - name: assur-front
         image: maryeeem/assur-front:4.0.5
         command: ['sh', '-c', 'npm run dev']
         imagePullPolicy: Always
+        # securityContext:
+        #   runAsUser: 0
+        #   runAsGroup: 0
+        #   allowPrivilegeEscalation: false
+        #   readOnlyRootFilesystem: false
         ports:
         - containerPort: 3001
         env:
@@ -32,14 +40,17 @@ spec:
           value: "http://localhost:3001"
         - name: secret
           value: "a'NrkZi22NIo.QZnxa!a?"
+        # envFrom:
+        # - secretRef:
+        #     name: assure-api-secrets
         volumeMounts:
         - name: secrets-store
           mountPath: "/mnt/secrets-store"
           readOnly: true
-        resources:
-          limits:
-            cpu: "500m"
-            memory: "512Mi"
+#        resources:
+#          limits:
+ #           cpu: "50m"
+ #           memory: "128Mi"
       volumes:
       - name: secrets-store
         csi:

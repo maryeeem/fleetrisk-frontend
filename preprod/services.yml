@@ -1,13 +1,13 @@
+---
 apiVersion: v1
 kind: Service
 metadata:
   name: assur-front-service
-  namespace: preprod
 spec:
   selector:
     app: assur-front
   ports:
   - protocol: TCP
     port: 3001
-    targetPort: 3001
+    targetPort: 3001  # Changé de 3001 à 3000
   type: ClusterIP
